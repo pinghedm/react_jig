@@ -22,4 +22,13 @@ def run_jig():
 
 
 app.install(cors_plugin(["http://localhost:3000"]))
-app.run(host="localhost", port=CONFIG["PORT"], debug=CONFIG.get("DEBUG", False))
+additional_options = {}
+if not CONFIG.get("DEBUG"):
+    additional_options["server"] = "gunicorn"
+    additional_options["workers"] = 1
+app.run(
+    host="localhost",
+    port=CONFIG["PORT"],
+    debug=CONFIG.get("DEBUG", False),
+    **additional_options
+)
